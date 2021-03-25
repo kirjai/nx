@@ -23,6 +23,7 @@ import {
 } from '../../utils/types';
 import { customServer } from './lib/custom-server';
 import { defaultServer } from './lib/default-server';
+import buildExecutor from '../build/build.impl';
 
 try {
   require('dotenv').config();
@@ -41,6 +42,9 @@ export default async function* serveExecutor(
     buildTarget,
     context
   );
+  if (!options.dev) {
+    await buildExecutor(buildOptions, context);
+  }
   const root = resolve(context.root, buildOptions.root);
   const config = await prepareConfig(
     options.dev ? PHASE_DEVELOPMENT_SERVER : PHASE_PRODUCTION_SERVER,
